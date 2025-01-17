@@ -4,21 +4,28 @@ import { Link } from "react-router-dom";
 
 const ProductList = () => {
   const [products, setProducts] = useState([]);
+  const [error, setError] = useState(null);  // Menambahkan state untuk error
 
   useEffect(() => {
     getProducts();
   }, []);
 
   const getProducts = async () => {
-    const response = await axios.get("http://localhost:5000/products");
-    setProducts(response.data);
+    try {
+      const response = await axios.get("http://localhost:5000/products");
+      setProducts(response.data);
+    } catch (err) {
+      setError("Failed to fetch products.");
+      console.error(err);
+    }
   };
 
   const deleteProduct = async (productId) => {
     try {
       await axios.delete(`http://localhost:5000/products/${productId}`);
-      getProducts();
+      getProducts(); // Memanggil kembali getProducts setelah menghapus produk
     } catch (error) {
+      setError("Failed to delete product.");
       console.log(error);
     }
   };
@@ -28,42 +35,47 @@ const ProductList = () => {
       <Link to="/add" className="button is-success">
         Add New
       </Link>
+
+      {error && <p className="has-text-danger">{error}</p>} {/* Menampilkan pesan error */}
+
       <div className="columns is-multiline mt-2">
-        {products.map((product) => (
-          <div className="column is-one-quarter" key={product.id}>
-            <div className="card">
-              <div className="card-image">
-                <figure className="image is-4by3">
-                  <img src={product.url} alt="Image" />
-                </figure>
-              </div>
-              <div className="card-content">
-                <div className="media">
-                  <div className="media-content">
-                    <p className="title is-4">{product.name}</p>
+        {products.length > 0 ? (
+          products.map((product) => (
+            <div className="column is-one-quarter" key={product.id}>
+              <div className="card">
+                <div className="card-image">
+                  <figure className="image is-4by3">
+                    <img src={product.url} alt={product.name} />
+                  </figure>
+                </div>
+                <div className="card-content">
+                  <div className="media">
+                    <div className="media-content">
+                      <p className="title is-4">{product.name}</p>
+                    </div>
                   </div>
                 </div>
-              </div>
 
-              <footer className="card-footer">
-                <Link to={`edit/${product.id}`} className="card-footer-item">
-                  Edit
-                </Link>
-                <a
-                  onClick={() => deleteProduct(product.id)}
-                  className="card-footer-item"
-                >
-                  Delete
-                </a>
-              </footer>
+                <footer className="card-footer">
+                  <Link to={`edit/${product.id}`} className="card-footer-item">
+                    Edit
+                  </Link>
+                  <button
+                    onClick={() => deleteProduct(product.id)}
+                    className="card-footer-item"
+                  >
+                    Delete
+                  </button>
+                </footer>
+              </div>
             </div>
-          </div>
-        ))}
+          ))
+        ) : (
+          <p>No products found.</p>
+        )}
       </div>
     </div>
   );
 };
 
-export default ProductList;console.log('ProductList component rendered');
-console.log('Products:', products);
-console.log('Error:', error);
+export default ProductList;

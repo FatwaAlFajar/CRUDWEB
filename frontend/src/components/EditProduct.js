@@ -10,15 +10,14 @@ const EditProduct = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
+    const getProductById = async () => {
+      const response = await axios.get(`http://localhost:5000/products/${id}`);
+      setTitle(response.data.name);
+      setFile(response.data.image);
+      setPreview(response.data.url);
+    };
     getProductById();
-  }, []);
-
-  const getProductById = async () => {
-    const response = await axios.get(`http://localhost:5000/products/${id}`);
-    setTitle(response.data.name);
-    setFile(response.data.image);
-    setPreview(response.data.url);
-  };
+  }, [id]); // Menambahkan 'id' sebagai dependency
 
   const loadImage = (e) => {
     const image = e.target.files[0];
@@ -48,20 +47,20 @@ const EditProduct = () => {
       <div className="column is-half">
         <form onSubmit={updateProduct}>
           <div className="field">
-            <label className="label">Product Name</label>
+            <label className="label">Nama Produk</label>
             <div className="control">
               <input
                 type="text"
                 className="input"
                 value={title}
                 onChange={(e) => setTitle(e.target.value)}
-                placeholder="Product Name"
+                placeholder="Nama Produk"
               />
             </div>
           </div>
 
           <div className="field">
-            <label className="label">Image</label>
+            <label className="label">Gambar</label>
             <div className="control">
               <div className="file">
                 <label className="file-label">
@@ -71,7 +70,7 @@ const EditProduct = () => {
                     onChange={loadImage}
                   />
                   <span className="file-cta">
-                    <span className="file-label">Choose a file...</span>
+                    <span className="file-label">Pilih file...</span>
                   </span>
                 </label>
               </div>
@@ -80,7 +79,7 @@ const EditProduct = () => {
 
           {preview ? (
             <figure className="image is-128x128">
-              <img src={preview} alt="Preview Image" />
+              <img src={preview} alt="Preview produk" />
             </figure>
           ) : (
             ""

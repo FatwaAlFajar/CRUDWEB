@@ -10,8 +10,12 @@ const AddProduct = () => {
 
   const loadImage = (e) => {
     const image = e.target.files[0];
-    setFile(image);
-    setPreview(URL.createObjectURL(image));
+    if (image && image.type.startsWith('image/')) {
+      setFile(image);
+      setPreview(URL.createObjectURL(image));
+    } else {
+      alert("Please select a valid image file.");
+    }
   };
 
   const saveProduct = async (e) => {
@@ -68,7 +72,7 @@ const AddProduct = () => {
 
           {preview ? (
             <figure className="image is-128x128">
-              <img src={preview} alt="Preview Image" />
+              <img src={preview} alt="Product preview" />
             </figure>
           ) : (
             ""
