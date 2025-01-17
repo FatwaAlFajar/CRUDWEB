@@ -14,7 +14,7 @@ const AddProduct = () => {
       setFile(image);
       setPreview(URL.createObjectURL(image));
     } else {
-      alert("Please select a valid image file.");
+      alert("Harap pilih file gambar yang valid.");
     }
   };
 
