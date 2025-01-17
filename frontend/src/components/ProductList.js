@@ -10,13 +10,13 @@ const ProductList = () => {
   }, []);
 
   const getProducts = async () => {
-    const response = await axios.get("http://localhost:5173/products");
+    const response = await axios.get("http://localhost:5000/products");
     setProducts(response.data);
   };
 
   const deleteProduct = async (productId) => {
     try {
-      await axios.delete(`http://localhost:5173/products/${productId}`);
+      await axios.delete(`http://localhost:5000/products/${productId}`);
       getProducts();
     } catch (error) {
       console.log(error);
@@ -64,4 +64,6 @@ const ProductList = () => {
   );
 };
 
-export default ProductList;
+export default ProductList;console.log('ProductList component rendered');
+console.log('Products:', products);
+console.log('Error:', error);
